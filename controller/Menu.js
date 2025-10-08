@@ -41,8 +41,8 @@ export const createMenu = async (req, res) => {
     await MenuModel.create({
       ...otherFields,
       CREATED_ID: userId,
-      UPDATED_ID: userId,
-      UPDATED_AT: new Date(),
+      UPDATED_ID: null,
+      UPDATED_AT: null,
     });
 
     res.status(201).json({status: true, message: "Success create menu"});
@@ -66,9 +66,7 @@ export const updateMenu = async (req, res) => {
       { where: { ID: id } }
     );
 
-    if (updatedRowsCount === 0) {
-      return res.status(404).json({ status:false, message: "Menu not found" });
-    }
+    if (updatedRowsCount === 0) return res.status(404).json({ status:false, message: "Menu not found" });
 
     res.status(200).json({status: true, message: "Success update menu"});
   } catch (error) {

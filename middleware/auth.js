@@ -11,25 +11,31 @@ export const verifyToken = async (req, res, next) => {
   }
   try {
     const user = await UserModel.findOne({ where: { TOKEN: token } });
-    if (!user || !user.REF_TOKEN) return res.status(403).json({ status: false, message: "Access Denied" });
 
+
+    if (!user || !user.REF_TOKEN) return res.status(403).json({ status: false, message: "Access Denied" });
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, decoded) => {
       if (err) {
         jwt.verify(user.REF_TOKEN, process.env.REFRESH_TOKEN_SECRET, async (refreshErr, refreshDecoded) => {
-            if (refreshErr) {
-              await user.update({ REF_TOKEN: null });
-              return res.status(403).json({ status: false, message: "Access Denied" });
-            }
-            const newAccessToken = jwt.sign(
-              { id: user.ID, email: user.EMAIL, COMPANY_ID: user.COMPANY_ID },
-              process.env.ACCESS_TOKEN_SECRET,
-              { expiresIn: "15m" }
-            );
-            await user.update({ TOKEN: newAccessToken });
-            res.set("X-New-Access-Token", newAccessToken);
-            req.user = refreshDecoded;
-            next();
-          });
+          if (refreshErr) {
+
+            await user.update({ REF_TOKEN: null });
+            return res.status(403).json({ status: false, message: "Access Denied" });
+          }
+
+          const newAccessToken = jwt.sign(
+            { id: user.ID, email: user.EMAIL, COMPANY_ID: user.COMPANY_ID },
+            process.env.ACCESS_TOKEN_SECRET,
+            { expiresIn: "15m" }
+          );
+
+          await user.update({ TOKEN: newAccessToken });
+
+          res.set("X-New-Access-Token", newAccessToken);
+          res.header("Access-Control-Expose-Headers", "X-New-Access-Token");
+          req.user = refreshDecoded;
+          next();
+        });
       } else {
         req.user = decoded;
         next();
