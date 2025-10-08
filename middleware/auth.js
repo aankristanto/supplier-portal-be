@@ -15,8 +15,7 @@ export const verifyToken = async (req, res, next) => {
 
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, decoded) => {
       if (err) {
-        if (err.name === "TokenExpiredError") {
-          jwt.verify(user.REF_TOKEN, process.env.REFRESH_TOKEN_SECRET, async (refreshErr, refreshDecoded) => {
+        jwt.verify(user.REF_TOKEN, process.env.REFRESH_TOKEN_SECRET, async (refreshErr, refreshDecoded) => {
             if (refreshErr) {
               await user.update({ REF_TOKEN: null });
               return res.status(403).json({ status: false, message: "Access Denied" });
@@ -31,9 +30,6 @@ export const verifyToken = async (req, res, next) => {
             req.user = refreshDecoded;
             next();
           });
-        } else {
-          return res.status(403).json({ status: false, message: "Access Denied" });
-        }
       } else {
         req.user = decoded;
         next();

@@ -7,6 +7,11 @@ import cors from "cors";
 
 const PORT = 5001;
 const app = express();
+const cros = cors({
+  origin:  ["http://localhost:3000"], 
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+})
 
 const runDb = async () => {
   try {
@@ -19,16 +24,18 @@ const runDb = async () => {
 runDb();
 
 
-app.use(cors({
-  origin:  ["http://localhost:3000"], 
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-}));
+app.use(cros);
 app.use(express.json());
 
+
+// app.use("/", (req, res) => {
+//   return res.status(200).json("Portal vendor PT Sumber Bintang rejeki running at " + new  Date())
+// })
+
 app.use("/api", mainRoter)
-app.use("/", (req, res) => {
-  return res.status(200).json("Portal vendor PT Sumber Bintang rejeki running at " + new  Date())
-})
+
+app.use((req, res) => {
+  res.status(404).json({ status: false, message: "Route not found" });
+});
 
 app.listen(PORT, () => console.log(`Server Running on port: ${PORT} at ${new Date().toLocaleString('en-US', { timeZone: 'Asia/Jakarta' })}`));
