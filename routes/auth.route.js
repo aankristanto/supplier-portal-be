@@ -1,11 +1,13 @@
 import express from "express";
-import { loginUser, registerUser, updatePassword, updateProfile } from "../controller/User.js";
+import { fetchProfileByToken, loginUser, registerUser, updatePassword, updateProfile } from "../controller/User.js";
+import { verifyToken } from "../middleware/auth.js";
 
 const router = express.Router();
 
 router.post("/register", registerUser);
 router.post("/login", loginUser);
-router.put("/profile", updateProfile);
-router.put("/password", updatePassword);
+router.get("/profile", verifyToken, fetchProfileByToken)
+router.put("/profile", verifyToken, updateProfile);
+router.put("/password", verifyToken, updatePassword);
 
 export default router;

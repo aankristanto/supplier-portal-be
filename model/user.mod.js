@@ -19,6 +19,10 @@ const UserModel = db.define("xref_user", {
     type: DataTypes.STRING(200),
     allowNull: false,
   },
+  GENDER: {
+    type: DataTypes.STRING(200),
+    allowNull: false,
+  },
   NO_TELEPHONE: {
     type: DataTypes.STRING(50),
     allowNull: true,
@@ -60,6 +64,10 @@ const UserModel = db.define("xref_user", {
     type: DataTypes.STRING(100),
     allowNull: true,
   },
+  IS_LOGGINED: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
+  }
 }, {
   tableName: 'xref_user',
   timestamps: false,

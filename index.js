@@ -1,7 +1,9 @@
 import express from "express";
 import db from "./config/database.js";
-import authRoutes from "./routes/auth.route.js";
-import { verifyToken } from "./middleware/auth.js";
+import mainRoter from "./routes/main.route.js"
+import cors from "cors"; 
+
+
 
 const PORT = 5001;
 const app = express();
@@ -14,17 +16,17 @@ const runDb = async () => {
     console.log("Unable to connect to the database:", err);
   }
 };
-
 runDb();
 
+
+app.use(cors({
+  origin:  ["http://localhost:3000"], 
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+}));
 app.use(express.json());
 
-
-app.use("/auth", authRoutes);
-app.get("/profile", verifyToken, (req, res) => {
-  res.status(200).json({ message: "Access granted", user: req.user });
-});
-
+app.use("/api", mainRoter)
 app.use("/", (req, res) => {
   return res.status(200).json("Portal vendor PT Sumber Bintang rejeki running at " + new  Date())
 })
