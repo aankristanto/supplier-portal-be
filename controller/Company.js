@@ -2,12 +2,18 @@ import CompanyModel from "../model/company.mod.js";
 
 export const getAllCompanies = async (req, res) => {
   const {CODE, COUNTRY_CODE } = req.query
+  const where = {}
 
+  if (CODE) {
+    where.CODE = CODE
+  }
+
+  if (COUNTRY_CODE) {
+    where.COUNTRY_CODE = COUNTRY_CODE
+  }
 
   try {
-    const companies = await CompanyModel.findAll({ where: {
-        CODE, COUNTRY_CODE
-    }});
+    const companies = await CompanyModel.findAll({ where });
     res.status(200).json({status: true, message: "Success get all", data: companies});
   } catch (err) {
     res.status(500).json({ status: false, message: err.message });
