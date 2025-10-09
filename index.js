@@ -3,12 +3,9 @@ import db from "./config/database.js";
 import mainRoter from "./routes/main.route.js"
 import cors from "cors"; 
 
-
-
-const PORT = 5001;
 const app = express();
 const cros = cors({
-  origin:  ["http://localhost:3000"], 
+  origin:  ["http://localhost:3000", "http://localhost:3001"], 
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
 })
@@ -38,4 +35,5 @@ app.use((req, res) => {
   res.status(404).json({ status: false, message: "Route not found" });
 });
 
+const PORT = 5004;
 app.listen(PORT, () => console.log(`Server Running on port: ${PORT} at ${new Date().toLocaleString('en-US', { timeZone: 'Asia/Jakarta' })}`));
