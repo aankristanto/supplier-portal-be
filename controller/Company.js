@@ -97,3 +97,29 @@ export const deleteCompany = async (req, res) => {
     res.status(500).json({ status: false, message: err.message });
   }
 };
+
+
+export const globalManipulationCompany = async (req, res) => {
+  const body = req.body
+
+  if (!body) return res.status(400).json({status: false, message: "Failed request"})
+
+  try {
+    const company = await CompanyModel.findByPk(body?.ID)
+    if (company) {
+      await company.update({
+        ...body,
+        UPDATED_AT: new Date(),
+      })
+    }
+
+    await CompanyModel.create({
+      ...body,
+      CREATED_AT: new Date()
+    })
+
+    return res.status(200).json({status: true, message: "Success manipulation data"})
+  } catch (err) {
+    return res.status(500).json({status: false, message: "Failed to post manipulation company"})
+  }
+}

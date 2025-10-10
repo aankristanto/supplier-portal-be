@@ -185,7 +185,7 @@ const CompanyModel = db.define("xref_company", {
   },
 }, {
   tableName: 'xref_company',
-  timestamps: false, // Karena kita handle CREATED_AT/UPDATED_AT manual
+  timestamps: false, 
 });
 
 export default CompanyModel;
