@@ -5,6 +5,7 @@ import { updateStatusOrder } from "./api/summit.js";
 export const getAllPurchaseOrders = async (req, res) => {
   const { MPO_STATUS } = req.query
   const userCompanyId = req.user.companyId;
+
   try {
     const orders = await PurchaseOrderModel.findAll({
       where: { VENDOR_ID: userCompanyId, MPO_STATUS },

@@ -2,6 +2,7 @@ import { Op } from "sequelize";
 import UserModel from "../model/user.mod.js";
 import { hashPassword } from "../utils/crypto.js";
 import jwt from "jsonwebtoken";
+import { getClientIp } from "../utils/general.js";
 
 export const registerUser = async (req, res) => {
     const { INITIAL, PASSWORD, NAME, GENDER, EMAIL, NO_TELEPHONE, COMPANY_ID, ADDRESS, POSITION, LEVEL, SUMMARY, USER_PATH } = req.body;
@@ -60,14 +61,16 @@ export const loginUser = async (req, res) => {
         );
 
         const refreshToken = jwt.sign(
-            { id: user.ID, email: user.EMAIL, companyId: user.COMPANY_ID },
+            { id: user.ID },
             process.env.REFRESH_TOKEN_SECRET,
             { expiresIn: "7d" }
         );
 
         await user.update({
             IS_LOGGINED: true,
+            IP_LOGGINED: getClientIp(req),
             TOKEN: accessToken,
+            UPDATED_AT: new Date(),
             REF_TOKEN: refreshToken
         });
 

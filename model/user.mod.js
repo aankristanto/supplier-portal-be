@@ -64,9 +64,16 @@ const UserModel = db.define("xref_user", {
     type: DataTypes.STRING(100),
     allowNull: true,
   },
+  IP_LOGGINED: {
+    type: DataTypes.STRING(200),
+    allowNull: true,
+  },
   IS_LOGGINED: {
     type: DataTypes.BOOLEAN,
     defaultValue: false
+  },
+  UPDATED_AT: {
+    type: DataTypes.DATE,
   }
 }, {
   tableName: 'xref_user',
