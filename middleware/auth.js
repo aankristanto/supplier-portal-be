@@ -44,7 +44,7 @@ export const verifyToken = async (req, res, next) => {
 
 
 export const verifyTokenGlobal =  async (req, res, next) => {
-  const authHeader = req.headers["x-token-access"];
+  const authHeader = req.headers["x-access-token"];
 
   const autorize = authHeader && authHeader.split(" ")[0];
   const token = authHeader && authHeader.split(" ")[1];
